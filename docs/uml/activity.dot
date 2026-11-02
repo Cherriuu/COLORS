@@ -1,0 +1,51 @@
+digraph COLORS_Activity {
+  graph [label="COLORS — Activity Diagram (login and one color action)", labelloc=t, fontsize=21, fontname="DejaVu Sans", fontcolor="#20324a", bgcolor="white", pad=0.5, nodesep=0.36, ranksep=0.55, splines=polyline];
+  node [shape=box, style="rounded,filled", fillcolor="#f5f9ff", color="#82a5c9", fontname="DejaVu Sans", fontcolor="#1e344c", fontsize=11.5, margin="0.19,0.12", penwidth=1.4];
+  edge [color="#64748b", fontname="DejaVu Sans", fontsize=10, fontcolor="#475569", arrowsize=0.7, penwidth=1.35];
+
+  start [shape=circle, label="", width=0.20, height=0.20, fixedsize=true, fillcolor="#1e3a56", color="#1e3a56"];
+  credentials [label="Enter username and password\non index.html"];
+  postLogin [label="doLogin(): POST login/password\nto LAMPAPI/Login.php"];
+  queryUser [label="PHP SELECT ID, firstName, lastName\nfrom Users WHERE credentials match"];
+  valid [shape=diamond, label="id > 0?", width=1.22, height=0.75, fillcolor="#fffbeb", color="#d4a63c"];
+  invalid [label="Show incorrect credentials message", fillcolor="#fff2f2", color="#d38e8e"];
+  stopInvalid [shape=doublecircle, label="", width=0.28, height=0.28, fixedsize=true, fillcolor="#1e3a56", color="#1e3a56"];
+  cookie [label="saveCookie(): firstName, lastName, userId\n(cookie expires in 20 minutes)"];
+  colorPage [label="Open color.html; readCookie()"];
+  choose [shape=diamond, label="Choose action", width=1.45, height=0.8, fillcolor="#fffbeb", color="#d4a63c"];
+
+  enterAdd [label="Enter color and click Add Color"];
+  postAdd [label="addColor(): POST color, userId\nto AddColor.php"];
+  insertColor [label="INSERT into Colors (UserId, Name)"];
+  added [label="On HTTP 200, show\n'Color has been added'", fillcolor="#eaf8ef", color="#7bb792"];
+  stopAdd [shape=doublecircle, label="", width=0.28, height=0.28, fixedsize=true, fillcolor="#1e3a56", color="#1e3a56"];
+
+  enterSearch [label="Enter search term and click Search Color"];
+  postSearch [label="searchColor(): POST search, userId\nto SearchColors.php"];
+  queryColors [label="SELECT Name from Colors WHERE\nName LIKE %term% AND UserID = userId"];
+  results [shape=diamond, label="Matches?", width=1.25, height=0.77, fillcolor="#fffbeb", color="#d4a63c"];
+  display [label="Return results array;\ndisplay matching colors", fillcolor="#eaf8ef", color="#7bb792"];
+  noResults [label="Return error without results array;\nclient's .results.length access fails", fillcolor="#fff2f2", color="#d38e8e"];
+  stopSearch [shape=doublecircle, label="", width=0.28, height=0.28, fixedsize=true, fillcolor="#1e3a56", color="#1e3a56"];
+  stopNoResults [shape=doublecircle, label="", width=0.28, height=0.28, fixedsize=true, fillcolor="#1e3a56", color="#1e3a56"];
+
+  logout [label="doLogout(): clear state, expire cookie,\nnavigate to index.html"];
+  stopLogout [shape=doublecircle, label="", width=0.28, height=0.28, fixedsize=true, fillcolor="#1e3a56", color="#1e3a56"];
+
+  start -> credentials -> postLogin -> queryUser -> valid;
+  valid -> invalid [label="No"];
+  invalid -> stopInvalid;
+  valid -> cookie [label="Yes"];
+  cookie -> colorPage -> choose;
+  choose -> enterAdd [label="Add"];
+  enterAdd -> postAdd -> insertColor -> added -> stopAdd;
+  choose -> enterSearch [label="Search"];
+  enterSearch -> postSearch -> queryColors -> results;
+  results -> display [label="Yes"];
+  results -> noResults [label="No"];
+  display -> stopSearch;
+  noResults -> stopNoResults;
+  choose -> logout [label="Logout"];
+  logout -> stopLogout;
+  { rank=same; enterAdd; enterSearch; logout; }
+}

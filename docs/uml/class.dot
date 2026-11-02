@@ -1,0 +1,29 @@
+digraph COLORS_Structure {
+  graph [label="COLORS — Class Diagram (structural/module view)", labelloc=t, fontsize=21, fontname="DejaVu Sans", fontcolor="#20324a", bgcolor="white", rankdir=LR, pad=0.45, ranksep=0.95, nodesep=0.6, splines=polyline];
+  node [shape=plain, fontname="DejaVu Sans", fontsize=11];
+  edge [color="#72869d", fontname="DejaVu Sans", fontcolor="#52677d", fontsize=10, arrowsize=0.75, penwidth=1.4];
+
+  LoginPage [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7" COLOR="#7ba0c4" BGCOLOR="#ffffff"><TR><TD BGCOLOR="#e7f2ff"><FONT POINT-SIZE="10">&lt;&lt;HTML page&gt;&gt;</FONT><BR/><B>index.html</B></TD></TR><HR/><TR><TD ALIGN="LEFT">loginName input<BR ALIGN="LEFT"/>loginPassword input<BR ALIGN="LEFT"/>loginButton : doLogin()</TD></TR></TABLE>>];
+  ColorsPage [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7" COLOR="#7ba0c4" BGCOLOR="#ffffff"><TR><TD BGCOLOR="#e7f2ff"><FONT POINT-SIZE="10">&lt;&lt;HTML page&gt;&gt;</FONT><BR/><B>color.html</B></TD></TR><HR/><TR><TD ALIGN="LEFT">searchText input<BR ALIGN="LEFT"/>colorText input<BR ALIGN="LEFT"/>colorList display<BR ALIGN="LEFT"/>Add / Search / Logout buttons</TD></TR></TABLE>>];
+  Client [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7" COLOR="#5f90b9" BGCOLOR="#ffffff"><TR><TD BGCOLOR="#daebff"><FONT POINT-SIZE="10">&lt;&lt;JavaScript module&gt;&gt;</FONT><BR/><B>public/js/code.js</B></TD></TR><HR/><TR><TD ALIGN="LEFT">- urlBase<BR ALIGN="LEFT"/>- extension<BR ALIGN="LEFT"/>- userId<BR ALIGN="LEFT"/>- firstName<BR ALIGN="LEFT"/>- lastName</TD></TR><HR/><TR><TD ALIGN="LEFT">+ doLogin()<BR ALIGN="LEFT"/>+ saveCookie()<BR ALIGN="LEFT"/>+ readCookie()<BR ALIGN="LEFT"/>+ doLogout()<BR ALIGN="LEFT"/>+ addColor()<BR ALIGN="LEFT"/>+ searchColor()</TD></TR></TABLE>>];
+
+  LoginAPI [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7" COLOR="#79a89f" BGCOLOR="#ffffff"><TR><TD BGCOLOR="#e4f7ed"><FONT POINT-SIZE="10">&lt;&lt;PHP endpoint&gt;&gt;</FONT><BR/><B>Login.php</B></TD></TR><HR/><TR><TD ALIGN="LEFT">+ getRequestInfo()<BR ALIGN="LEFT"/>+ sendResultInfoAsJson(obj)<BR ALIGN="LEFT"/>+ returnWithError(err)<BR ALIGN="LEFT"/>+ returnWithInfo(firstName, lastName, id)</TD></TR></TABLE>>];
+  AddAPI [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7" COLOR="#79a89f" BGCOLOR="#ffffff"><TR><TD BGCOLOR="#e4f7ed"><FONT POINT-SIZE="10">&lt;&lt;PHP endpoint&gt;&gt;</FONT><BR/><B>AddColor.php</B></TD></TR><HR/><TR><TD ALIGN="LEFT">+ getRequestInfo()<BR ALIGN="LEFT"/>+ sendResultInfoAsJson(obj)<BR ALIGN="LEFT"/>+ returnWithError(err)</TD></TR></TABLE>>];
+  SearchAPI [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7" COLOR="#79a89f" BGCOLOR="#ffffff"><TR><TD BGCOLOR="#e4f7ed"><FONT POINT-SIZE="10">&lt;&lt;PHP endpoint&gt;&gt;</FONT><BR/><B>SearchColors.php</B></TD></TR><HR/><TR><TD ALIGN="LEFT">+ getRequestInfo()<BR ALIGN="LEFT"/>+ sendResultInfoAsJson(obj)<BR ALIGN="LEFT"/>+ returnWithError(err)<BR ALIGN="LEFT"/>+ returnWithInfo(searchResults)</TD></TR></TABLE>>];
+
+  Users [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7" COLOR="#bca16c" BGCOLOR="#ffffff"><TR><TD BGCOLOR="#fff2d8"><FONT POINT-SIZE="10">&lt;&lt;database table&gt;&gt;</FONT><BR/><B>Users</B></TD></TR><HR/><TR><TD ALIGN="LEFT">ID<BR ALIGN="LEFT"/>Login<BR ALIGN="LEFT"/>Password<BR ALIGN="LEFT"/>firstName<BR ALIGN="LEFT"/>lastName</TD></TR></TABLE>>];
+  Colors [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7" COLOR="#bca16c" BGCOLOR="#ffffff"><TR><TD BGCOLOR="#fff2d8"><FONT POINT-SIZE="10">&lt;&lt;database table&gt;&gt;</FONT><BR/><B>Colors</B></TD></TR><HR/><TR><TD ALIGN="LEFT">UserId<BR ALIGN="LEFT"/>Name</TD></TR></TABLE>>];
+
+  LoginPage -> Client [arrowhead=vee, style=dashed, label="calls doLogin()"];
+  ColorsPage -> Client [arrowhead=vee, style=dashed, label="calls methods"];
+  Client -> LoginAPI [arrowhead=vee, style=dashed, label="POST /Login.php"];
+  Client -> AddAPI [arrowhead=vee, style=dashed, label="POST /AddColor.php"];
+  Client -> SearchAPI [arrowhead=vee, style=dashed, label="POST /SearchColors.php"];
+  LoginAPI -> Users [arrowhead=vee, label="SELECT"];
+  AddAPI -> Colors [arrowhead=vee, label="INSERT"];
+  SearchAPI -> Colors [arrowhead=vee, label="SELECT"];
+  Colors -> Users [style=dashed, arrowhead=vee, color="#c1a35d", label="UserId → ID\n(logical link)", constraint=false];
+  {rank=same; LoginPage; ColorsPage;}
+  {rank=same; LoginAPI; AddAPI; SearchAPI;}
+  {rank=same; Users; Colors;}
+}

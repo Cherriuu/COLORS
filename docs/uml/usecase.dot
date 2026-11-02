@@ -1,0 +1,28 @@
+graph COLORS_UseCases {
+  graph [label="COLORS — Use Case Diagram", labelloc=t, fontsize=23, fontname="DejaVu Sans", fontcolor="#20324a", bgcolor="white", rankdir=LR, pad=0.55, nodesep=0.48, ranksep=1.05, splines=true];
+  node [fontname="DejaVu Sans", fontsize=13];
+  edge [color="#64748b", penwidth=1.65];
+
+  user [shape=plaintext, fontname="DejaVu Sans Mono", fontsize=19, fontcolor="#20324a", label="  O  \n /|\\ \n / \\ \n User "];
+
+  subgraph cluster_colors {
+    label="COLORS web application";
+    labeljust=l; labelloc=t; fontsize=15; fontcolor="#334155";
+    style="rounded,filled"; color="#cad6e5"; fillcolor="#f6f9fd"; penwidth=1.6;
+    node [shape=ellipse, style="filled", fillcolor="white", color="#6e97bf", fontcolor="#1e344c", penwidth=1.6, width=2.55, height=0.72];
+    login [label="Log in"];
+    add [label="Add a color"];
+    search [label="Search saved colors"];
+    logout [label="Log out"];
+    { rank=same; login; add; search; logout; }
+    logout -- search [style=invis];
+    search -- add [style=invis];
+    add -- login [style=invis];
+  }
+  user -- login;
+  user -- add;
+  user -- search;
+  user -- logout;
+  note [shape=note, style="filled", fillcolor="#fff9ec", color="#debe78", fontcolor="#594b2f", fontsize=11, label="Add, search, and logout are on color.html\nafter successful login. Searches are scoped\nto the logged-in user (UserID).", margin="0.20,0.14"];
+  search -- note [style=dashed, color="#caa453", constraint=false];
+}
